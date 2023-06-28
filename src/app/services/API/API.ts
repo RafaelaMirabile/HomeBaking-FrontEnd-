@@ -2,7 +2,8 @@ import axios from "axios";
 import { LoginInputs, TransactionsInputs, registerUserInputs } from "src/app/data-Types/data-types.module";
 
 const URL_BASE= 'http://localhost:3000';
-
+const userToken = localStorage.getItem("userToken");
+const userId =localStorage.getItem("userId");
 
 function postRegistration(body: Required<registerUserInputs>){
   const promise = axios.post(`${URL_BASE}/subscribe`,body);
@@ -13,7 +14,7 @@ const promise = axios.post(`${URL_BASE}/login`,body);
 return promise;
 }
 
-function getTransactions(userToken: any,userId: any) {
+function getTransactions() {
   const config = {
     headers: {
       Authorization: `Bearer ${userToken}`
@@ -24,8 +25,6 @@ function getTransactions(userToken: any,userId: any) {
 }
 
 function postCashFlow(body: Required<TransactionsInputs>){
-  const userToken = localStorage.getItem("userToken");
-  const userId =localStorage.getItem("userId");
   const config ={
       headers:{
           Authorization : `Bearer ${userToken}`
