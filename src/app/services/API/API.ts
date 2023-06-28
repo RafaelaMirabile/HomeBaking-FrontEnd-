@@ -5,7 +5,8 @@ const URL_BASE= 'http://localhost:3000';
 
 
 function postRegistration(body: Required<registerUserInputs>){
-  const promise = axios.post(`${URL_BASE}/register`,body);
+  console.log("indo pra postRegistration")
+  const promise = axios.post(`${URL_BASE}/subscribe`,body);
   return promise;
 }
 

@@ -7,7 +7,7 @@ import { FundsComponent } from './components/funds/funds.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'subscribe', component: RegisterComponent },
   {path:'funds', component: FundsComponent},
 ];
 @NgModule({

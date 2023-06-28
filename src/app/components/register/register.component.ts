@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { registerUserInputs } from 'src/app/data-Types/data-types.module';
 import { postRegistration } from 'src/app/services/API/API';
@@ -10,29 +10,30 @@ import { postRegistration } from 'src/app/services/API/API';
 })
 export class RegisterComponent {
   Roles: any = ['Admin', 'Author', 'Reader'];
-  constructor(private router: Router) {
-  }
-  ngOnInit() {
-  };
-  onClick() {
+  userEmail: string | undefined;
+  passwd: string | undefined;
+  userName:string | undefined
 
-  }
+  constructor(private router: Router) { }
 
-  redirecToLoginPage() {
+  redirectToLoginPage() {
     this.router.navigate(['login']);
-  };
+  }
 
-  registerRequest(data: Required<registerUserInputs>) {
-    const body = {
-      userName: data.userName,
-      userEmail: data.userEmail,
-      passwd: data.passwd
-    }
-    postRegistration(body).then(() => {
-      this.redirecToLoginPage;
-    }).catch()
+  registerRequest() {
+    const body: registerUserInputs = {
+      userEmail: this.userEmail || '',
+      passwd: this.passwd || '',
+      userName: this.userName || ''
+    };
 
-
+    postRegistration(body)
+      .then((res) => {
+        this.redirectToLoginPage();
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
-
