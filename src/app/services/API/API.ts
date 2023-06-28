@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginInputs, registerUserInputs } from "src/app/data-Types/data-types.module";
+import { LoginInputs, TransactionsInputs, registerUserInputs } from "src/app/data-Types/data-types.module";
 
 const URL_BASE= 'http://localhost:3000';
 
@@ -23,5 +23,17 @@ function getTransactions(userToken: any,userId: any) {
     return response;
 }
 
-export{postRegistration, getTransactions, postLogin}
+function postCashFlow(body: Required<TransactionsInputs>){
+  const userToken = localStorage.getItem("userToken");
+  const userId =localStorage.getItem("userId");
+  const config ={
+      headers:{
+          Authorization : `Bearer ${userToken}`
+      }
+  }
+  const promise = axios.post(`${URL_BASE}/funds/${userId}`,body,config);
+  return promise
+}
+
+export{postRegistration, getTransactions, postLogin,postCashFlow}
 

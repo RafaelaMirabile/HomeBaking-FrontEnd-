@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { postCashFlow } from 'src/app/services/API/API';
+import { TransactionsInputs } from 'src/app/data-Types/data-types.module';
 
 export interface UserData {
   id: string;
@@ -40,7 +42,7 @@ const NAMES: string[] = [
 })
 export class FundsComponent {
   Roles: any = ['Admin', 'Author', 'Reader'];
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+  displayedColumns: string[] = ['id', 'name', 'progress'];
   dataSource: MatTableDataSource<UserData>;
   transactionsDetails: any;
 
@@ -48,6 +50,10 @@ export class FundsComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   rowID: string | undefined;
+  rowProgress: string| undefined;
+  rowName: string | undefined;
+  description: string | undefined;
+  value: string | undefined
 
   constructor(public dialog: MatDialog) {
     const users = Array.from({ length: 100 }, (_, k) => this.createNewUser(k + 1));
@@ -56,6 +62,8 @@ export class FundsComponent {
   }
 
   selectRow(templateRef: TemplateRef<any>, row: UserData) {
+    this.rowProgress = row.progress;
+    this.rowName =row.name;
     this.rowID = row.id;
     const dialogRef = this.dialog.open(templateRef, {
       height: '200px',
@@ -68,7 +76,6 @@ export class FundsComponent {
   }
 
   /*userTransactions() {
-    const locallyStoredUserName = localStorage.getItem('userName');
     const locallyStoredUserId = localStorage.getItem('userId');
     const locallyStoredUserToken = localStorage.getItem('userToken');
     getTransactions(locallyStoredUserToken, locallyStoredUserId)
@@ -94,10 +101,29 @@ export class FundsComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  deleteRecord(row: UserData) {
-    alert(row.id);
+deposit(){
+  const body : TransactionsInputs ={
+    value:this.value || '',
+    type:"inflow",
+    description: this.description  || ''
   }
+  postCashFlow(body).then((res)=>{
+    console.log(res.data);
+    console.log("update table")
+  })
+}
+
+withDraw(){
+  const body : TransactionsInputs ={
+    value:this.value || '',
+    type:"outflow",
+    description: "Withdraw"
+  }
+  postCashFlow(body).then((res)=>{
+    console.log(res.data);
+    console.log("withdrawtable")
+  })
+}
 
   updateRecord(row: UserData) {
     alert(row.id);

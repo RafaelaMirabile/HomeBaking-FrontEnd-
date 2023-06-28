@@ -30,8 +30,10 @@ export class LoginComponent {
 
     postLogin(body)
       .then((res) => {
+        localStorage.setItem("userToken", res.data.token);
+        localStorage.setItem("userId", res.data.userId);
+        
         this.redirecToFundsPage();
-        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
