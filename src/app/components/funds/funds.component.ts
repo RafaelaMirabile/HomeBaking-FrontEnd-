@@ -79,12 +79,6 @@ export class FundsComponent {
       .catch((error) => {
         console.log(error);
       });
-      const res = [
-        { id: '1', name: 'User 1', progress: '50', fruit: 'kiwi' },
-        { id: '2', name: 'User 2', progress: '75', fruit: 'blueberry' },
-        { id: '3', name: 'User 3', progress: '30', fruit: 'pineapple' },
-      ];
-      this.transactionsDetails = res;
   }*/
 
   ngAfterViewInit() {
