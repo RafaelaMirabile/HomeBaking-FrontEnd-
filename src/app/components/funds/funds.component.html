@@ -37,17 +37,17 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
 </div>
 
-
 <ng-template #mytemplate>
   <h2>Row ID = {{rowID}}</h2>
-  <h3>{{rowProgress}}</h3>
+  <h3>$ {{rowProgress}}</h3>
   <h3>{{rowName}}</h3>
   <mat-dialog-actions>
-    <button>Delete</button>
+    <button (click)="deleteRecord()">Delete</button>
     <button>Update</button>
     <button mat-button mat-dialog-close>Return</button>
   </mat-dialog-actions>
 </ng-template>
+
 
 
 <mat-card class="example-card">

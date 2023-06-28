@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { getTransactions, postCashFlow } from 'src/app/services/API/API';
+import { deleteTransaction, getTransactions, postTransaction } from 'src/app/services/API/API';
 import { TransactionsInputs } from 'src/app/data-Types/data-types.module';
 
 export interface TransactionData {
@@ -33,15 +33,17 @@ export class FundsComponent {
   rowName: string | undefined;
   description: string | undefined;
   value: string | undefined;
+  selectedRow: TransactionData | undefined; // Rename 'row' to 'selectedRow'
 
   constructor(public dialog: MatDialog) {
     this.userTransactions();
   }
 
   selectRow(templateRef: TemplateRef<any>, row: TransactionData) {
+    this.selectedRow = row; // Assign 'row' to 'selectedRow'
     this.rowProgress = row.value;
-    this.rowName = row.type;
-    this.rowID = row.description;
+    this.rowName = row.description;
+    this.rowID = row.transactionId;
     const dialogRef = this.dialog.open(templateRef, {
       height: '200px',
       width: '250px',
@@ -52,9 +54,23 @@ export class FundsComponent {
     });
   }
 
+  deleteRecord() {
+    if (this.selectedRow) {
+      this.rowProgress = this.selectedRow.value;
+      this.rowName = this.selectedRow.description;
+      this.rowID = this.selectedRow.transactionId;
+
+      console.log(this.rowProgress, this.rowName, this.rowID);
+
+      deleteTransaction(this.selectedRow.transactionId).then((res) => {
+        this.userTransactions();
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+  }
+
   userTransactions() {
-    const locallyStoredUserId = localStorage.getItem('userId');
-    const locallyStoredUserToken = localStorage.getItem('userToken');
     getTransactions()
       .then((res) => {
         this.dataSource = new MatTableDataSource<TransactionData>(res.data);
@@ -84,10 +100,10 @@ export class FundsComponent {
       type: 'inflow',
       description: this.description || '',
     };
-    postCashFlow(body)
+    postTransaction(body)
       .then((res) => {
         console.log(res.data);
-        console.log('update table');
+        this.userTransactions();
       })
       .catch((error) => {
         console.log(error);
@@ -100,10 +116,11 @@ export class FundsComponent {
       type: 'outflow',
       description: 'Withdraw',
     };
-    postCashFlow(body)
+    
+    postTransaction(body)
       .then((res) => {
         console.log(res.data);
-        console.log('withdraw table');
+        this.userTransactions();
       })
       .catch((error) => {
         console.log(error);
@@ -111,6 +128,6 @@ export class FundsComponent {
   }
 
   updateRecord(row: TransactionData) {
-    alert(row.transactionId);
+
   }
 }
